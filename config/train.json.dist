@@ -1,0 +1,10 @@
+{
+  "topology": [625, 100, 30, 100, 625],
+  "learningRate": 0.05,
+  "momentum": 1.0,
+  "bias": 1.0,
+  "epoch": 100,
+  "trainingData": "/home/ralampay/workspace/ann/data/1.csv",
+  "labelData": "/home/ralampay/workspace/ann/data/1.csv",
+  "weightsFile": "/home/ralampay/workspace/ann/weights/1.json"
+}

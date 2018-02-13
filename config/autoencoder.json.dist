@@ -1,0 +1,6 @@
+{
+  "topology": [625, 200, 625],
+  "bias": 1.0,
+  "testFile": "/home/ralampay/workspace/ann/data/1.csv",
+  "weightsFile": "/home/ralampay/workspace/ann/weights/magi_character01_25x25.json"
+}
