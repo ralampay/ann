@@ -1,7 +1,5 @@
 #include "../../include/NeuralNetwork.hpp"
 
-#include "../../include/NeuralNetwork.hpp"
-
 void NeuralNetwork::saveWeights(string filename) {
   json j  = {};
 
@@ -11,7 +9,11 @@ void NeuralNetwork::saveWeights(string filename) {
     weightSet.push_back(this->weightMatrices.at(i)->getValues());
   }
 
-  j["weights"]  = weightSet;
+  j["weights"]      = weightSet;
+  j["topology"]     = this->topology;
+  j["learningRate"] = this->learningRate;
+  j["momentum"]     = this->momentum;
+  j["bias"]         = this->bias;
 
   std::ofstream o(filename);
   o << std::setw(4) << j << endl;
