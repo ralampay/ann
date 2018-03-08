@@ -14,5 +14,6 @@ weights/*.json
 data/
 
 # ignore executables
+autoencoder_visualizer
 autoencoder_classify
 train

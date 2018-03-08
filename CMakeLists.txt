@@ -4,6 +4,14 @@ project(ann)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -pthread -std=c++14")
 
+option(WITH_AUTOENCODER_VISUALIZER "autoencoder visualizer" OFF)
+
+if(WITH_AUTOENCODER_VISUALIZER)
+  message("Autoencoder visualizer set. Compiling...")
+else()
+  message("Autoencoder visualizer will not compile")
+endif()
+
 add_executable(
   train
   src/train.cpp
