@@ -17,3 +17,6 @@ data/
 autoencoder_visualizer
 autoencoder_classify
 train
+wg
+autoencoder_train_and_classify
+tensor_ann

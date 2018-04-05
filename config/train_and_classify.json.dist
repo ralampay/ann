@@ -1,0 +1,11 @@
+{
+  "topology": [625, 100, 30, 100, 625],
+  "learningRate": 0.05,
+  "momentum": 1.0,
+  "bias": 1.0,
+  "epoch": 200,
+  "trainingData": "/home/ralampay/workspace/ann/data/magi/train/1.csv",
+  "labelData": "/home/ralampay/workspace/ann/data/magi/train/1.csv",
+  "validationData": "/home/ralampay/workspace/ann/data/magi/test/1-4.csv",
+  "weightsFile": "/home/ralampay/workspace/ann/weights/initial_625_100_30.json"
+}

@@ -14,7 +14,7 @@ using json = nlohmann::json;
 
 void printSyntax() {
   cout << "Syntax:" << endl;
-  cout << "weights_generator [configFile]" << endl;
+  cout << "wg [configFile]" << endl;
 }
 
 int main(int argc, char **argv) {
@@ -34,8 +34,6 @@ int main(int argc, char **argv) {
   double momentum       = config["momentum"];
   double bias           = config["bias"];
   int epoch             = config["epoch"];
-  string trainingFile   = config["trainingData"];
-  string labelsFile     = config["labelData"];
   string weightsFile    = config["weightsFile"];
 
   vector<int> topology  = config["topology"];
@@ -52,31 +50,7 @@ int main(int argc, char **argv) {
 
   NeuralNetwork *n  = new NeuralNetwork(topology, 2, 3, 1, bias, learningRate, momentum);
 
-  vector< vector<double> > trainingData = utils::Misc::fetchData(trainingFile);
-  vector< vector<double> > labelData    = utils::Misc::fetchData(labelsFile);
-
-  cout << "Training Data Size: " << trainingData.size() << endl;
-  cout << "Label Data Size: " << labelData.size() << endl;
-
-  for(int i = 0; i < epoch; i++) {
-    for(int tIndex = 0; tIndex < trainingData.size(); tIndex++) {
-      vector<double> input    = trainingData.at(tIndex);
-      vector<double> target   = labelData.at(tIndex);
-
-      n->train(
-        input,
-        target,
-        bias,
-        learningRate,
-        momentum
-      );
-    }
-    cout << n->error << endl;
-
-    //cout << "Error at epoch " << i+1 << ": " << n->error << endl;
-  }
-
-  cout << "Done! Writing to " << weightsFile << "..." << endl;
+  cout << "Writing to " << weightsFile << "..." << endl;
   n->saveWeights(weightsFile);
 
   return 0;

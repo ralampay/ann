@@ -36,7 +36,8 @@ int main(int argc, char **argv) {
   int epoch             = config["epoch"];
   string trainingFile   = config["trainingData"];
   string labelsFile     = config["labelData"];
-  string weightsFile    = config["weightsFile"];
+  string validationFile = config["validationData"];
+  string weightsFile    = config["weightsFile"];    // initial weights
 
   vector<int> topology  = config["topology"];
 
@@ -52,8 +53,12 @@ int main(int argc, char **argv) {
 
   NeuralNetwork *n  = new NeuralNetwork(topology, 2, 3, 1, bias, learningRate, momentum);
 
-  vector< vector<double> > trainingData = utils::Misc::fetchData(trainingFile);
-  vector< vector<double> > labelData    = utils::Misc::fetchData(labelsFile);
+  cout << "Loading weights from: " << weightsFile << endl;
+  n->loadWeights(weightsFile);
+
+  vector< vector<double> > trainingData   = utils::Misc::fetchData(trainingFile);
+  vector< vector<double> > labelData      = utils::Misc::fetchData(labelsFile);
+  vector< vector<double> > validationData = utils::Misc::fetchData(validationFile);
 
   cout << "Training Data Size: " << trainingData.size() << endl;
   cout << "Label Data Size: " << labelData.size() << endl;
@@ -71,13 +76,23 @@ int main(int argc, char **argv) {
         momentum
       );
     }
-    cout << n->error << endl;
 
-    //cout << "Error at epoch " << i+1 << ": " << n->error << endl;
+    cout << n->error << ",";
+
+    // iterate through validation
+    for(int vIndex = 0; vIndex < validationData.size(); vIndex++) {
+      vector<double> validation = validationData.at(vIndex);
+      n->setCurrentInput(validation);
+      n->setCurrentTarget(validation);
+      n->feedForward();
+      n->setErrors();
+      cout << n->error;
+      if(vIndex != validationData.size() - 1) {
+        cout << ",";
+      }
+    }
+    cout << endl;
   }
-
-  cout << "Done! Writing to " << weightsFile << "..." << endl;
-  n->saveWeights(weightsFile);
 
   return 0;
 }
