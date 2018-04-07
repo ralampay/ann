@@ -17,6 +17,35 @@ void printSyntax() {
   cout << "train [configFile]" << endl;
 }
 
+ANNConfig buildConfig(json configObject) {
+  ANNConfig config;
+
+  double learningRate   = configObject["learningRate"];
+  double momentum       = configObject["momentum"];
+  double bias           = configObject["bias"];
+  int epoch             = configObject["epoch"];
+  string trainingFile   = configObject["trainingFile"];
+  string labelsFile     = configObject["labelsFile"];
+  string weightsFile    = configObject["weightsFile"];
+  vector<int> topology  = configObject["topology"];
+
+  ANN_ACTIVATION hActivation  = configObject["hActivation"];
+  ANN_ACTIVATION oActivation  = configObject["oActivation"];
+
+  config.topology     = topology;
+  config.bias         = bias;
+  config.learningRate = learningRate;
+  config.momentum     = momentum;
+  config.epoch        = epoch;
+  config.hActivation  = hActivation;
+  config.oActivation  = oActivation;
+  config.trainingFile = trainingFile;
+  config.labelsFile   = labelsFile;
+  config.weightsFile  = weightsFile;
+
+  return config;
+}
+
 int main(int argc, char **argv) {
 
   if(argc != 2) {
@@ -28,37 +57,15 @@ int main(int argc, char **argv) {
   string str((std::istreambuf_iterator<char>(configFile)),
               std::istreambuf_iterator<char>());
 
-  auto config = json::parse(str);
+  NeuralNetwork *n  = new NeuralNetwork(buildConfig(json::parse(str)));
 
-  double learningRate   = config["learningRate"];
-  double momentum       = config["momentum"];
-  double bias           = config["bias"];
-  int epoch             = config["epoch"];
-  string trainingFile   = config["trainingData"];
-  string labelsFile     = config["labelData"];
-  string weightsFile    = config["weightsFile"];
-
-  vector<int> topology  = config["topology"];
-
-  cout << "Learning Rate: " << learningRate << endl;
-  cout << "Momentum: " << momentum << endl;
-  cout << "Bias: " << bias << endl;
-
-  cout << "Topology: " << endl;
-  for(int i = 0; i < topology.size(); i++) {
-    cout << topology.at(i) << "\t";
-  }
-  cout << endl;
-
-  NeuralNetwork *n  = new NeuralNetwork(topology, 2, 3, 1, bias, learningRate, momentum);
-
-  vector< vector<double> > trainingData = utils::Misc::fetchData(trainingFile);
-  vector< vector<double> > labelData    = utils::Misc::fetchData(labelsFile);
+  vector< vector<double> > trainingData = utils::Misc::fetchData(n->config.trainingFile);
+  vector< vector<double> > labelData    = utils::Misc::fetchData(n->config.labelsFile);
 
   cout << "Training Data Size: " << trainingData.size() << endl;
   cout << "Label Data Size: " << labelData.size() << endl;
 
-  for(int i = 0; i < epoch; i++) {
+  for(int i = 0; i < n->config.epoch; i++) {
     for(int tIndex = 0; tIndex < trainingData.size(); tIndex++) {
       vector<double> input    = trainingData.at(tIndex);
       vector<double> target   = labelData.at(tIndex);
@@ -66,9 +73,9 @@ int main(int argc, char **argv) {
       n->train(
         input,
         target,
-        bias,
-        learningRate,
-        momentum
+        n->config.bias,
+        n->config.learningRate,
+        n->config.momentum
       );
     }
     cout << n->error << endl;
@@ -76,8 +83,8 @@ int main(int argc, char **argv) {
     //cout << "Error at epoch " << i+1 << ": " << n->error << endl;
   }
 
-  cout << "Done! Writing to " << weightsFile << "..." << endl;
-  n->saveWeights(weightsFile);
+  cout << "Done! Writing to " << n->config.weightsFile << "..." << endl;
+  n->saveWeights(n->config.weightsFile);
 
   return 0;
 }

@@ -15,4 +15,7 @@ data/
 
 # ignore executables
 autoencoder_classify
+autoencoder_train_and_classify
 train
+wg
+tensor_train

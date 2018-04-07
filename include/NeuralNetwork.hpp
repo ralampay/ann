@@ -1,8 +1,6 @@
 #ifndef _NEURAL_NETWORK_HPP_
 #define _NEURAL_NETWORK_HPP_
 
-#define COST_MSE 1
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -16,25 +14,34 @@
 using namespace std;
 using json = nlohmann::json;
 
+enum ANN_COST {
+  COST_MSE
+};
+
+enum ANN_ACTIVATION {
+  A_TANH,
+  A_RELU,
+  A_SIGM
+};
+
+struct ANNConfig {
+  vector<int> topology;
+  double bias;
+  double learningRate;
+  double momentum;
+  int epoch;
+  ANN_ACTIVATION hActivation;
+  ANN_ACTIVATION oActivation;
+  ANN_COST cost;
+  string trainingFile;
+  string labelsFile;
+  string weightsFile;
+};
+
 class NeuralNetwork
 {
 public:
-  NeuralNetwork(
-    vector<int> topology,
-    double bias = 1,
-    double learningRate = 0.05,
-    double momentum = 1
-  );
-
-  NeuralNetwork(
-    vector<int> topology,
-    int hiddenActivationType,
-    int outputActivationType,
-    int costFunctionType,
-    double bias = 1,
-    double learningRate = 0.05,
-    double momentum = 1
-  );
+  NeuralNetwork(ANNConfig config);
 
   void train(
         vector<double> input, 
@@ -82,6 +89,8 @@ public:
   double bias               = 1;
   double momentum;
   double learningRate;
+
+  ANNConfig config;
 
 private:
   void setErrorMSE();
