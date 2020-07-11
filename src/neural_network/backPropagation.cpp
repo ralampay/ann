@@ -147,6 +147,7 @@ void NeuralNetwork::backPropagation() {
     delete tempNewWeights;
     delete deltaWeights;
   }
+  delete gradients;
 
   for(int i = 0; i < this->weightMatrices.size(); i++) {
     delete this->weightMatrices[i];
