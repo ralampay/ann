@@ -97,7 +97,7 @@ void NeuralNetwork::backPropagation() {
 
     hiddenDerived       = this->layers.at(i)->matrixifyDerivedVals();
 
-    for(int colCounter = 0; colCounter < hiddenDerived->getNumRows(); colCounter++) {
+    for(int colCounter = 0; colCounter < hiddenDerived->getNumCols(); colCounter++) {
       double  g = gradients->getValue(0, colCounter) * hiddenDerived->getValue(0, colCounter);
       gradients->setValue(0, colCounter, g);
     }
@@ -105,7 +105,7 @@ void NeuralNetwork::backPropagation() {
     if(i == 1) {
       zActivatedVals  = this->layers.at(0)->matrixifyVals();
     } else {
-      zActivatedVals  = this->layers.at(0)->matrixifyActivatedVals();
+      zActivatedVals  = this->layers.at(i-1)->matrixifyActivatedVals();
     }
 
     transposedHidden  = zActivatedVals->transpose();
